@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vtuber Card Generator</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+</head>
+<body>
+  <div class="container py-5">
+    <h1 class="text-center mb-4">Vtuber Card Generator</h1>
+    <div class="row">
+      <!-- Generator Input -->
+      <div class="col-md-6">
+        <div class="card p-4">
+          <div class="text-center mb-3">
+            <img id="avatar-preview" src="avatar-placeholder.png" alt="Avatar" class="img-fluid rounded-circle border" style="width: 150px; height: 150px;" />
+            <input type="file" id="avatar-upload" class="form-control mt-3" accept="image/*" />
+          </div>
+          <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" id="name" class="form-control" placeholder="Vtuber Name" />
+          </div>
+          <div class="mb-3">
+            <label for="bio" class="form-label">Bio</label>
+            <textarea id="bio" class="form-control" placeholder="Short Bio" rows="3"></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="youtube" class="form-label">YouTube</label>
+            <input type="text" id="youtube" class="form-control" placeholder="YouTube Username" />
+          </div>
+          <div class="mb-3">
+            <label for="tiktok" class="form-label">TikTok</label>
+            <input type="text" id="tiktok" class="form-control" placeholder="TikTok Username" />
+          </div>
+          <div class="mb-3">
+            <label for="instagram" class="form-label">Instagram</label>
+            <input type="text" id="instagram" class="form-control" placeholder="Instagram Username" />
+          </div>
+          <div class="mb-3">
+            <label for="x" class="form-label">X (Twitter)</label>
+            <input type="text" id="x" class="form-control" placeholder="Twitter Username" />
+          </div>
+          <div class="mb-3">
+            <label for="facebook" class="form-label">Facebook</label>
+            <input type="text" id="facebook" class="form-control" placeholder="Facebook Username" />
+          </div>
+          <div class="mb-3">
+            <label for="color" class="form-label">Card Color</label>
+            <input type="color" id="color" class="form-control" value="#ffffff" />
+          </div>
+          <button class="btn btn-primary" id="generate-btn">Generate Preview</button>
+        </div>
+      </div>
+
+      <!-- Preview Card -->
+      <div class="col-md-6">
+        <div id="vtuber-card-preview" class="card p-4 text-center">
+          <div id="vtuber-card">
+            <img id="preview-avatar" src="avatar-placeholder.png" alt="Avatar" class="img-fluid rounded-circle border mb-3" style="width: 150px; height: 150px;" />
+            <h2 id="preview-name">Vtuber Name</h2>
+            <p id="preview-bio">Short Bio</p>
+            <p id="preview-youtube">YouTube: </p>
+            <p id="preview-tiktok">TikTok: </p>
+            <p id="preview-instagram">Instagram: </p>
+            <p id="preview-x">X (Twitter): </p>
+            <p id="preview-facebook">Facebook: </p>
+          </div>
+        </div>
+        <div class="text-center mt-4">
+          <button class="btn btn-success" id="download-btn" disabled>Download Card</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Avatar Upload Preview
+    document.getElementById('avatar-upload').addEventListener('change', function (e) {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+
+      reader.onload = function (event) {
+        document.getElementById('avatar-preview').src = event.target.result;
+        document.getElementById('preview-avatar').src = event.target.result;
+      };
+
+      if (file) {
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Generate Preview
+    document.getElementById('generate-btn').addEventListener('click', function () {
+      const name = document.getElementById('name').value;
+      const bio = document.getElementById('bio').value;
+      const youtube = document.getElementById('youtube').value;
+      const tiktok = document.getElementById('tiktok').value;
+      const instagram = document.getElementById('instagram').value;
+      const x = document.getElementById('x').value;
+      const facebook = document.getElementById('facebook').value;
+      const color = document.getElementById('color').value;
+
+      document.getElementById('vtuber-card-preview').style.backgroundColor = color;
+      document.getElementById('preview-name').textContent = name || 'Vtuber Name';
+      document.getElementById('preview-bio').textContent = bio || 'Short Bio';
+      document.getElementById('preview-youtube').textContent = 'YouTube: ' + youtube;
+      document.getElementById('preview-tiktok').textContent = 'TikTok: ' + tiktok;
+      document.getElementById('preview-instagram').textContent = 'Instagram: ' + instagram;
+      document.getElementById('preview-x').textContent = 'X (Twitter): ' + x;
+      document.getElementById('preview-facebook').textContent = 'Facebook: ' + facebook;
+
+      document.getElementById('download-btn').disabled = false;
+    });
+
+    // Download Card as JPG
+    document.getElementById('download-btn').addEventListener('click', function () {
+      const card = document.getElementById('vtuber-card');
+
+      html2canvas(card).then(function (canvas) {
+        const link = document.createElement('a');
+        link.download = 'vtuber-card.jpg';
+        link.href = canvas.toDataURL('image/jpeg');
+        link.click();
+      });
+    });
+  </script>
+</body>
+</html>
